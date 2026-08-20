@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>NEET PG Mock Test</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@500;600;700&family=Inter:wght@400;500;600;700;800&display=swap');
+
+  :root{
+    --ink:#0F1B2D;
+    --ink-2:#16273F;
+    --paper:#FAF9F6;
+    --paper-2:#F1EFE8;
+    --line:#E2DFD5;
+    --teal:#0D7377;
+    --teal-dark:#0A5A5D;
+    --amber:#D4A24C;
+    --amber-dark:#B8863A;
+    --crimson:#C0392B;
+    --green:#1F8A5F;
+    --text:#1A2333;
+    --text-dim:#5C6B7A;
+    --white:#FFFFFF;
+  }
+
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:'Inter',sans-serif;
+    background:var(--paper);
+    color:var(--text);
+    min-height:100vh;
+    overflow-x:hidden;
+    -webkit-user-select:none;
+    user-select:none;
+  }
+
+  /* ---------- WATERMARK ---------- */
+  #watermark-layer{
+    position:fixed;
+    inset:0;
+    z-index:9999;
+    pointer-events:none;
+    overflow:hidden;
+    opacity:0.07;
+  }
+  .wm-row{
+    display:flex;
+    white-space:nowrap;
+    transform:rotate(-30deg);
+    position:relative;
+  }
+  .wm-row span{
+    font-family:'Inter',sans-serif;
+    font-weight:800;
+    font-size:15px;
+    letter-spacing:1.5px;
+    color:#0F1B2D;
+    margin:0 28px;
+    text-transform:uppercase;
+  }
+
+  /* ---------- SCREEN: START ---------- */
+  #start-screen{
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    background:
+      radial-gradient(ellipse at top left, rgba(13,115,119,0.10), transparent 55%),
+      radial-gradient(ellipse at bottom right, rgba(212,162,76,0.08), transparent 55%),
+      var(--ink);
+    color:var(--paper);
+    padding:0;
+  }
+  .start-inner{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    padding:32px 24px;
+    max-width:520px;
+    margin:0 auto;
+    width:100%;
+  }
+  .brand-row{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:36px;
+    opacity:0.85;
+  }
+  .brand-dot{
+    width:8px;height:8px;border-radius:50%;
+    background:var(--amber);
+    box-shadow:0 0 0 3px rgba(212,162,76,0.2);
+  }
+  .brand-label{
+    font-size:12px;
+    letter-spacing:2.5px;
+    text-transform:uppercase;
+    color:var(--amber);
+    font-weight:600;
+  }
+  .exam-title{
+    font-family:'Source Serif 4',serif;
+    font-size:clamp(34px,9vw,48px);
+    line-height:1.08;
+    font-weight:700;
+    margin:0 0 8px 0;
+    color:var(--white);
+  }
+  .exam-sub{
+    font-size:15px;
+    color:rgba(250,249,246,0.65);
+    margin:0 0 32px 0;
+    line-height:1.5;
+  }
+  .stat-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:1px;
+    background:rgba(250,249,246,0.12);
+    border-radius:14px;
+    overflow:hidden;
+    margin-bottom:28px;
+  }
+  .stat-cell{
+    background:rgba(255,255,255,0.04);
+    padding:16px 10px;
+    text-align:center;
+  }
+  .stat-num{
+    font-family:'Source Serif 4',serif;
+    font-size:26px;
+    font-weight:700;
+    color:var(--white);
+    display:block;
+  }
+  .stat-label{
+    font-size:10.5px;
+    color:rgba(250,249,246,0.55);
+    text-transform:uppercase;
+    letter-spacing:1px;
+    margin-top:4px;
+    display:block;
+  }
+  .marking-box{
+    border:1px solid rgba(250,249,246,0.18);
+    border-radius:12px;
+    padding:16px 18px;
+    margin-bottom:28px;
+    background:rgba(255,255,255,0.03);
+  }
+  .marking-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    font-size:13.5px;
+    padding:5px 0;
+    color:rgba(250,249,246,0.85);
+  }
+  .marking-row b{color:var(--white); font-weight:600;}
+  .marking-row .pos{color:#7FD9B0;}
+  .instructions{
+    font-size:13px;
+    line-height:1.65;
+    color:rgba(250,249,246,0.55);
+    margin-bottom:32px;
+  }
+  .instructions li{margin-bottom:6px;}
+  #begin-btn{
+    width:100%;
+    background:var(--amber);
+    color:var(--ink);
+    border:none;
+    padding:17px;
+    border-radius:12px;
+    font-size:16px;
+    font-weight:700;
+    font-family:'Inter',sans-serif;
+    cursor:pointer;
+    letter-spacing:0.3px;
+    transition:transform .15s ease, box-shadow .15s ease;
+    box-shadow:0 8px 24px rgba(212,162,76,0.25);
+  }
+  #begin-btn:active{transform:scale(0.98);}
+
+  /* ---------- SCREEN: EXAM ---------- */
+  #exam-screen{display:none; min-height:100vh; flex-direction:column;}
+
+  .exam-header{
+    position:sticky; top:0; z-index:20;
+    background:var(--ink);
+    color:var(--paper);
+    padding:12px 16px 0 16px;
+  }
+  .header-top-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:10px;
+  }
+  .qnum-tag{
+    font-family:'Source Serif 4',serif;
+    font-size:15px;
+    font-weight:600;
+  }
+  .qnum-tag span{color:var(--amber);}
+  .timer{
+    font-variant-numeric:tabular-nums;
+    font-size:14px;
+    font-weight:600;
+    background:rgba(255,255,255,0.08);
+    padding:5px 12px;
+    border-radius:20px;
+    letter-spacing:0.5px;
+  }
+  .timer.low{background:rgba(192,57,43,0.35); color:#FFD5D0;}
+  .subject-chip{
+    display:inline-block;
+    font-size:10.5px;
+    text-transform:uppercase;
+    letter-spacing:1.2px;
+    color:var(--teal);
+    background:rgba(13,115,119,0.15);
+    padding:4px 10px;
+    border-radius:20px;
+    margin-bottom:10px;
+    font-weight:700;
+  }
+  .progress-track{
+    height:3px;
+    background:rgba(255,255,255,0.1);
+    border-radius:3px;
+    overflow:hidden;
+    margin-bottom:0;
+  }
+  .progress-fill{
+    height:100%;
+    background:linear-gradient(90deg, var(--teal), var(--amber));
+    border-radius:3px;
+    transition:width .3s ease;
+  }
+
+  .exam-body{
+    flex:1;
+    padding:22px 18px 100px 18px;
+    max-width:640px;
+    margin:0 auto;
+    width:100%;
+  }
+
+  .question-text{
+    font-family:'Source Serif 4',serif;
+    font-size:19px;
+    line-height:1.5;
+    color:var(--text);
+    margin:0 0 22px 0;
+    white-space:pre-line;
+    font-weight:500;
+  }
+  .question-text.match-q{
+    font-size:17px;
+  }
+
+  .options{
+    display:flex;
+    flex-direction:column;
+    gap:11px;
+  }
+  .option{
+    display:flex;
+    align-items:flex-start;
+    gap:12px;
+    background:var(--white);
+    border:1.5px solid var(--line);
+    border-radius:12px;
+    padding:14px 16px;
+    cursor:pointer;
+    transition:border-color .15s ease, background .15s ease, transform .1s ease;
+    font-size:15px;
+    line-height:1.45;
+  }
+  .option:active{transform:scale(0.99);}
+  .option-letter{
+    flex-shrink:0;
+    width:28px;height:28px;
+    border-radius:50%;
+    border:1.5px solid var(--line);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:700;
+    font-size:13px;
+    color:var(--text-dim);
+    background:var(--paper);
+    transition:all .15s ease;
+  }
+  .option.selected{
+    border-color:var(--teal);
+    background:rgba(13,115,119,0.06);
+  }
+  .option.selected .option-letter{
+    background:var(--teal);
+    border-color:var(--teal);
+    color:var(--white);
+  }
+
+  .action-row{
+    display:flex;
+    gap:10px;
+    margin-top:26px;
+  }
+  .btn-ghost{
+    flex:1;
+    background:var(--white);
+    border:1.5px solid var(--line);
+    color:var(--text-dim);
+    padding:12px;
+    border-radius:10px;
+    font-size:13.5px;
+    font-weight:600;
+    cursor:pointer;
+    font-family:'Inter',sans-serif;
+  }
+  .btn-ghost.active-mark{
+    border-color:var(--amber);
+    color:var(--amber-dark);
+    background:rgba(212,162,76,0.08);
+  }
+
+  /* Bottom nav */
+  .bottom-nav{
+    position:fixed;
+    bottom:0; left:0; right:0;
+    background:var(--white);
+    border-top:1px solid var(--line);
+    padding:10px 14px calc(10px + env(safe-area-inset-bottom,0px)) 14px;
+    display:flex;
+    gap:8px;
+    z-index:30;
+    box-shadow:0 -4px 20px rgba(0,0,0,0.06);
+  }
+  .nav-btn{
+    flex:1;
+    padding:13px;
+    border-radius:10px;
+    border:none;
+    font-weight:700;
+    font-size:14px;
+    cursor:pointer;
+    font-family:'Inter',sans-serif;
+  }
+  .nav-btn.prev{background:var(--paper-2); color:var(--text);}
+  .nav-btn.prev:disabled{opacity:0.4;}
+  .nav-btn.next{background:var(--ink); color:var(--white);}
+  .nav-btn.palette-toggle{
+    flex:0 0 52px;
+    background:var(--paper-2);
+    color:var(--text);
+    font-size:12px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+  }
+  .nav-btn.submit-btn{background:var(--crimson); color:var(--white);}
+
+  /* Palette sheet */
+  #palette-overlay{
+    position:fixed; inset:0;
+    background:rgba(15,27,45,0.5);
+    z-index:40;
+    display:none;
+  }
+  #palette-sheet{
+    position:fixed;
+    bottom:0; left:0; right:0;
+    background:var(--paper);
+    border-radius:20px 20px 0 0;
+    max-height:78vh;
+    overflow-y:auto;
+    z-index:41;
+    padding:18px 18px calc(20px + env(safe-area-inset-bottom,0px)) 18px;
+    transform:translateY(100%);
+    transition:transform .28s ease;
+    box-shadow:0 -10px 40px rgba(0,0,0,0.2);
+  }
+  #palette-sheet.open{transform:translateY(0);}
+  .sheet-handle{
+    width:40px;height:4px;
+    background:var(--line);
+    border-radius:4px;
+    margin:0 auto 16px auto;
+  }
+  .sheet-title{
+    font-family:'Source Serif 4',serif;
+    font-size:18px;
+    font-weight:700;
+    margin:0 0 14px 0;
+  }
+  .legend-row{
+    display:flex;
+    gap:14px;
+    flex-wrap:wrap;
+    margin-bottom:18px;
+    font-size:11.5px;
+    color:var(--text-dim);
+  }
+  .legend-item{display:flex; align-items:center; gap:5px;}
+  .legend-dot{width:11px;height:11px;border-radius:4px;}
+  .palette-grid{
+    display:grid;
+    grid-template-columns:repeat(6,1fr);
+    gap:8px;
+    margin-bottom:8px;
+  }
+  .pgrid-item{
+    aspect-ratio:1;
+    border-radius:9px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:12.5px;
+    font-weight:700;
+    cursor:pointer;
+    border:1.5px solid var(--line);
+    background:var(--white);
+    color:var(--text-dim);
+    position:relative;
+  }
+  .pgrid-item.answered{background:var(--teal); border-color:var(--teal); color:var(--white);}
+  .pgrid-item.marked{background:var(--amber); border-color:var(--amber); color:var(--ink);}
+  .pgrid-item.current{box-shadow:0 0 0 2.5px var(--ink);}
+
+  /* ---------- SCREEN: RESULTS ---------- */
+  #results-screen{display:none; min-height:100vh; background:var(--paper);}
+  .results-hero{
+    background:var(--ink);
+    color:var(--white);
+    padding:40px 22px 34px 22px;
+    text-align:center;
+    border-radius:0 0 28px 28px;
+  }
+  .score-ring-wrap{
+    width:168px;height:168px;
+    margin:0 auto 18px auto;
+    position:relative;
+  }
+  .score-ring-wrap svg{transform:rotate(-90deg);}
+  .score-center{
+    position:absolute; inset:0;
+    display:flex; flex-direction:column;
+    align-items:center; justify-content:center;
+  }
+  .score-value{
+    font-family:'Source Serif 4',serif;
+    font-size:34px;
+    font-weight:700;
+  }
+  .score-total{font-size:12px; color:rgba(255,255,255,0.6); margin-top:2px;}
+  .results-verdict{
+    font-family:'Source Serif 4',serif;
+    font-size:20px;
+    font-weight:600;
+    margin:4px 0 4px 0;
+  }
+  .results-sub{font-size:13px; color:rgba(255,255,255,0.6);}
+
+  .results-body{
+    max-width:640px;
+    margin:0 auto;
+    padding:22px 18px 40px 18px;
+  }
+  .stat-cards{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:10px;
+    margin-bottom:24px;
+  }
+  .stat-card{
+    background:var(--white);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:16px;
+  }
+  .stat-card .num{font-family:'Source Serif 4',serif; font-size:24px; font-weight:700;}
+  .stat-card .lbl{font-size:11.5px; color:var(--text-dim); margin-top:3px; text-transform:uppercase; letter-spacing:0.6px;}
+  .stat-card.correct .num{color:var(--green);}
+  .stat-card.wrong .num{color:var(--crimson);}
+  .stat-card.unattempted .num{color:var(--text-dim);}
+  .stat-card.marks .num{color:var(--teal-dark);}
+
+  .subject-breakdown{
+    background:var(--white);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:6px 16px;
+    margin-bottom:22px;
+  }
+  .sb-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:12px 0;
+    border-bottom:1px solid var(--paper-2);
+    font-size:13.5px;
+  }
+  .sb-row:last-child{border-bottom:none;}
+  .sb-name{font-weight:600;}
+  .sb-frac{color:var(--text-dim); font-variant-numeric:tabular-nums;}
+
+  .review-section-title{
+    font-family:'Source Serif 4',serif;
+    font-size:19px;
+    font-weight:700;
+    margin:8px 0 14px 0;
+  }
+  .review-card{
+    background:var(--white);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:16px;
+    margin-bottom:12px;
+  }
+  .review-tag{
+    display:inline-block;
+    font-size:10px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:0.8px;
+    padding:3px 9px;
+    border-radius:20px;
+    margin-bottom:10px;
+  }
+  .review-tag.correct{background:rgba(31,138,95,0.12); color:var(--green);}
+  .review-tag.wrong{background:rgba(192,57,43,0.12); color:var(--crimson);}
+  .review-tag.skipped{background:var(--paper-2); color:var(--text-dim);}
+  .review-q{font-size:14.5px; margin-bottom:10px; white-space:pre-line; line-height:1.45;}
+  .review-opt{
+    font-size:13.5px;
+    padding:8px 11px;
+    border-radius:8px;
+    margin-bottom:6px;
+    background:var(--paper-2);
+    display:flex;
+    gap:8px;
+  }
+  .review-opt.is-correct{background:rgba(31,138,95,0.1); color:#155c40; font-weight:600;}
+  .review-opt.is-wrong-selected{background:rgba(192,57,43,0.1); color:#8f2c20; font-weight:600;}
+
+  #retake-btn{
+    width:100%;
+    background:var(--ink);
+    color:var(--white);
+    border:none;
+    padding:16px;
+    border-radius:12px;
+    font-size:15px;
+    font-weight:700;
+    cursor:pointer;
+    font-family:'Inter',sans-serif;
+    margin-top:6px;
+  }
+
+  .filter-tabs{
+    display:flex;
+    gap:8px;
+    margin-bottom:16px;
+    overflow-x:auto;
+    padding-bottom:2px;
+  }
+  .filter-tab{
+    flex-shrink:0;
+    padding:8px 14px;
+    border-radius:20px;
+    border:1px solid var(--line);
+    background:var(--white);
+    font-size:12.5px;
+    font-weight:600;
+    color:var(--text-dim);
+    cursor:pointer;
+  }
+  .filter-tab.active{background:var(--ink); color:var(--white); border-color:var(--ink);}
+
+  @media (min-width:520px){
+    .exam-body{padding-top:26px;}
+  }
+</style>
+</head>
+<body>
+
+<div id="watermark-layer"></div>
+
+<!-- ============ START SCREEN ============ -->
+<div id="start-screen">
+  <div class="start-inner">
+    <div class="brand-row">
+      <div class="brand-dot"></div>
+      <div class="brand-label">Full Length Mock</div>
+    </div>
+    <h1 class="exam-title">NEET&nbsp;PG<br>Grand Test</h1>
+    <p class="exam-sub">200 questions across 19 subjects. Single-best-answer and multi-statement formats, timed exam-hall conditions.</p>
+
+    <div class="stat-grid">
+      <div class="stat-cell">
+        <span class="stat-num">200</span>
+        <span class="stat-label">Questions</span>
+      </div>
+      <div class="stat-cell">
+        <span class="stat-num">19</span>
+        <span class="stat-label">Subjects</span>
+      </div>
+      <div class="stat-cell">
+        <span class="stat-num">200</span>
+        <span class="stat-label">Minutes</span>
+      </div>
+    </div>
+
+    <div class="marking-box">
+      <div class="marking-row"><span>Correct answer</span><b class="pos">+4</b></div>
+      <div class="marking-row"><span>Incorrect answer</span><b>0</b></div>
+      <div class="marking-row"><span>Not attempted</span><b>0</b></div>
+    </div>
+
+    <ul class="instructions">
+      <li>Each question carries 4 marks. There is no negative marking in this test.</li>
+      <li>Use the question palette to jump between questions or flag items for review.</li>
+      <li>The timer starts as soon as you begin and the test auto-submits at zero.</li>
+      <li>Your scorecard with subject-wise breakup appears immediately after submission.</li>
+    </ul>
+
+    <button id="begin-btn">Begin Test</button>
+  </div>
+</div>
+
+<!-- ============ EXAM SCREEN ============ -->
+<div id="exam-screen">
+  <div class="exam-header">
+    <div class="header-top-row">
+      <div class="qnum-tag">Q<span id="qnum">1</span> <span style="color:rgba(250,249,246,0.4); font-weight:400;">/ 200</span></div>
+      <div class="timer" id="timer">03:20:00</div>
+    </div>
+    <div id="subject-chip" class="subject-chip">Medicine</div>
+    <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:0.5%;"></div></div>
+  </div>
+
+  <div class="exam-body">
+    <p class="question-text" id="question-text"></p>
+    <div class="options" id="options-container"></div>
+
+    <div class="action-row">
+      <button class="btn-ghost" id="clear-btn">Clear response</button>
+      <button class="btn-ghost" id="mark-btn">Mark for review</button>
+    </div>
+  </div>
+
+  <div class="bottom-nav">
+    <button class="nav-btn prev" id="prev-btn">Prev</button>
+    <button class="nav-btn palette-toggle" id="palette-btn">☰</button>
+    <button class="nav-btn next" id="next-btn">Next</button>
+  </div>
+</div>
+
+<div id="palette-overlay"></div>
+<div id="palette-sheet">
+  <div class="sheet-handle"></div>
+  <h3 class="sheet-title">Question Palette</h3>
+  <div class="legend-row">
+    <div class="legend-item"><div class="legend-dot" style="background:var(--teal);"></div>Answered</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--amber);"></div>Marked</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--white); border:1.5px solid var(--line);"></div>Not answered</div>
+  </div>
+  <div class="palette-grid" id="palette-grid"></div>
+  <button class="nav-btn submit-btn" id="submit-btn" style="width:100%; margin-top:16px; padding:15px;">Submit Test</button>
+</div>
+
+<!-- ============ RESULTS SCREEN ============ -->
+<div id="results-screen">
+  <div class="results-hero">
+    <div class="score-ring-wrap">
+      <svg width="168" height="168">
+        <circle cx="84" cy="84" r="74" stroke="rgba(255,255,255,0.12)" stroke-width="12" fill="none"/>
+        <circle id="score-circle" cx="84" cy="84" r="74" stroke="#D4A24C" stroke-width="12" fill="none" stroke-linecap="round" stroke-dasharray="465" stroke-dashoffset="465"/>
+      </svg>
+      <div class="score-center">
+        <div class="score-value" id="final-score">0</div>
+        <div class="score-total">out of 800</div>
+      </div>
+    </div>
+    <div class="results-verdict" id="verdict-text">Test Complete</div>
+    <div class="results-sub" id="percentile-text">Here's how you did</div>
+  </div>
+
+  <div class="results-body">
+    <div class="stat-cards">
+      <div class="stat-card correct"><div class="num" id="stat-correct">0</div><div class="lbl">Correct</div></div>
+      <div class="stat-card wrong"><div class="num" id="stat-wrong">0</div><div class="lbl">Incorrect</div></div>
+      <div class="stat-card unattempted"><div class="num" id="stat-unattempted">0</div><div class="lbl">Unattempted</div></div>
+      <div class="stat-card marks"><div class="num" id="stat-accuracy">0%</div><div class="lbl">Accuracy</div></div>
+    </div>
+
+    <h3 class="review-section-title">Subject-wise Score</h3>
+    <div class="subject-breakdown" id="subject-breakdown"></div>
+
+    <h3 class="review-section-title">Answer Review</h3>
+    <div class="filter-tabs" id="filter-tabs">
+      <div class="filter-tab active" data-filter="all">All 200</div>
+      <div class="filter-tab" data-filter="wrong">Incorrect</div>
+      <div class="filter-tab" data-filter="skipped">Skipped</div>
+      <div class="filter-tab" data-filter="correct">Correct</div>
+    </div>
+    <div id="review-list"></div>
+
+    <button id="retake-btn">Retake Test</button>
+  </div>
+</div>
+
+<script>
+const QUESTIONS = [{"subject": "Medicine", "text": "A 62-year-old man has central chest pain radiating to the left arm for 2 hours. ECG shows ST elevation in II, III, aVF. What is the most likely artery involved?", "options": ["Left circumflex artery", "Right coronary artery", "Left main coronary artery", "Left anterior descending artery"], "correct": 1}, {"subject": "Medicine", "text": "A patient with acute MI reaches a PCI-capable center within 90 minutes of symptom onset. What is the preferred reperfusion strategy?", "options": ["Clopidogrel alone", "Primary PCI", "Streptokinase", "Aspirin alone"], "correct": 1}, {"subject": "Medicine", "text": "A 55-year-old man with heart failure has edema, orthopnea, and raised JVP. Which drug improves survival in HFrEF?", "options": ["Digoxin", "Nitroglycerin", "ACE inhibitor", "Furosemide"], "correct": 2}, {"subject": "Medicine", "text": "Regarding atrial fibrillation, which of the following statements are correct?\n1. Irregularly irregular pulse is typical.\n2. Warfarin/DOAC may be needed for stroke prevention.\n3. P wave is usually absent on ECG.\n4. Ventricular rate is always slow.", "options": ["1 and 4 only", "2 and 4 only", "1, 2 and 3 only", "1, 2, 3 and 4"], "correct": 2}, {"subject": "Medicine", "text": "A 28-year-old woman has tremor, heat intolerance, weight loss, and diffuse goiter. Which finding favors Graves disease?", "options": ["Pretibial myxedema", "Delayed relaxation of ankle jerk", "Myxedema coma", "Cold intolerance"], "correct": 0}, {"subject": "Medicine", "text": "A diabetic patient has vomiting, abdominal pain, Kussmaul breathing, glucose 480 mg/dL, and ketones in urine. What is the first essential treatment?", "options": ["Oral metformin", "Sodium bicarbonate in all cases", "Loop diuretic", "IV insulin with fluids"], "correct": 3}, {"subject": "Medicine", "text": "Regarding DKA (diabetic ketoacidosis), which of the following statements are correct?\n1. It usually presents with metabolic acidosis.\n2. Serum potassium may be normal or high initially.\n3. Insulin is started after potassium assessment.\n4. It is treated primarily with oral hypoglycemics.", "options": ["2 and 4 only", "1 and 4 only", "1, 2 and 3 only", "1, 2, 3 and 4"], "correct": 2}, {"subject": "Medicine", "text": "A patient with confusion, ophthalmoplegia, and ataxia after prolonged vomiting is given thiamine. Which deficiency is being treated?", "options": ["Vitamin B1", "Niacin", "Vitamin B12", "Vitamin B6"], "correct": 0}, {"subject": "Medicine", "text": "A 70-year-old man suddenly develops right-sided weakness and aphasia. CT brain shows no bleed. He presents within 2 hours. Best next step?", "options": ["Immediate thrombolysis if eligible", "Mannitol only", "Start warfarin immediately", "Observe for 24 hours"], "correct": 0}, {"subject": "Medicine", "text": "Regarding ischemic stroke thrombolysis, which of the following statements are correct?\n1. It is time-sensitive.\n2. CT brain should exclude hemorrhage first.\n3. It can be used in all patients regardless of bleeding risk.\n4. Onset-to-treatment window is limited.", "options": ["2 and 3 only", "1, 2, 3 and 4", "1, 2 and 4 only", "1 and 3 only"], "correct": 2}, {"subject": "Medicine", "text": "An ECG shows sawtooth flutter waves. What is the diagnosis?", "options": ["Sinus tachycardia", "Atrial flutter", "AV dissociation", "Ventricular tachycardia"], "correct": 1}, {"subject": "Medicine", "text": "Match the following:\n1. Myasthenia gravis\n2. Guillain-Barre syndrome\n3. Parkinson disease\n4. Multiple sclerosis\n\na. Resting tremor\nb. Ascending paralysis\nc. Fatigable weakness\nd. Demyelinating CNS disease", "options": ["1-d, 2-b, 3-a, 4-c", "1-c, 2-a, 3-b, 4-d", "1-b, 2-c, 3-a, 4-d", "1-c, 2-b, 3-a, 4-d"], "correct": 3}, {"subject": "Medicine", "text": "A patient has hypertension, muscle weakness, metabolic alkalosis, and low renin, low aldosterone. Diagnosis?", "options": ["Addison disease", "Pheochromocytoma", "Primary hyperaldosteronism", "Liddle syndrome"], "correct": 3}, {"subject": "Medicine", "text": "A patient has severe hypertension, episodic headache, palpitations, and sweating. Best initial diagnostic test?", "options": ["Urine calcium", "Serum potassium", "Plasma free metanephrines", "Serum cortisol"], "correct": 2}, {"subject": "Medicine", "text": "Regarding COPD, which of the following statements are correct?\n1. Smoking is a major risk factor.\n2. FEV1/FVC is reduced.\n3. Bronchodilators are mainstay therapy.\n4. It is usually completely reversible.", "options": ["1, 2 and 3 only", "2 and 4 only", "1, 2, 3 and 4", "1 and 4 only"], "correct": 0}, {"subject": "Medicine", "text": "A patient with chronic cough, fever, weight loss, and upper lobe cavitary lesion is most likely to have:", "options": ["Pleural mesothelioma", "Pulmonary edema", "Bronchial asthma", "Pulmonary tuberculosis"], "correct": 3}, {"subject": "Medicine", "text": "A patient with suspected anaphylaxis after antibiotic injection is hypotensive and wheezing. What is the first-line drug?", "options": ["IM adrenaline", "Nebulized salbutamol only", "IV chlorpheniramine only", "IV hydrocortisone"], "correct": 0}, {"subject": "Medicine", "text": "A patient has jaundice, pruritus, raised ALP, and pale stools. This pattern is most suggestive of:", "options": ["Cholestatic jaundice", "Crigler-Najjar syndrome", "Hemolytic jaundice", "Gilbert syndrome"], "correct": 0}, {"subject": "Medicine", "text": "Regarding hyperkalemia, which of the following ECG changes may be seen?\n1. Peaked T waves\n2. Widened QRS\n3. Flattened T waves\n4. Sine-wave pattern in severe cases", "options": ["1, 2, 3 and 4", "2 and 3 only", "1 and 3 only", "1, 2 and 4 only"], "correct": 3}, {"subject": "Medicine", "text": "In a patient with diabetes and cardiovascular disease, which class of drug is now strongly favored for cardiorenal benefit?", "options": ["Sulfonylureas", "SGLT2 inhibitors", "Alpha-glucosidase inhibitors", "Meglitinides"], "correct": 1}, {"subject": "Surgery", "text": "A 19-year-old man has a groin swelling that appears on coughing and reduces on lying down. On examination, it is above and medial to the pubic tubercle. Most likely diagnosis?", "options": ["Indirect inguinal hernia", "Femoral hernia", "Obturator hernia", "Direct inguinal hernia"], "correct": 3}, {"subject": "Surgery", "text": "A 42-year-old woman has a painless breast lump. FNAC suggests fibroadenoma. Which feature is most typical?", "options": ["Hard fixed mass with peau d'orange", "Axillary node metastasis always present", "Bloody nipple discharge only", "Smooth, mobile, rubbery lump"], "correct": 3}, {"subject": "Surgery", "text": "Regarding breast carcinoma, which of the following statements are correct?\n1. Sentinel lymph node biopsy is used for axillary staging.\n2. Modified radical mastectomy removes the breast and axillary contents.\n3. Breast-conserving surgery is never used in early disease.\n4. ER/PR status helps in treatment planning.", "options": ["1 and 3 only", "1, 2, 3 and 4", "2 and 3 only", "1, 2 and 4 only"], "correct": 3}, {"subject": "Surgery", "text": "A patient with thyroid swelling has hoarseness of voice after surgery. Which nerve is likely injured?", "options": ["Hypoglossal nerve", "Vagus nerve trunk", "External branch of superior laryngeal nerve", "Recurrent laryngeal nerve"], "correct": 3}, {"subject": "Surgery", "text": "X-ray neck shows narrowing of airway with deviation due to enlarged thyroid. Which diagnosis is most likely?", "options": ["Tracheomalacia", "Retropharyngeal abscess", "Large multinodular goiter", "Esophageal cancer"], "correct": 2}, {"subject": "Surgery", "text": "A patient with a painful swelling in the right iliac fossa, fever, and vomiting is most likely to have:", "options": ["Acute cholecystitis", "Pancreatitis", "Acute appendicitis", "Diverticulitis"], "correct": 2}, {"subject": "Surgery", "text": "Regarding acute appendicitis, which of the following statements are correct?\n1. McBurney point tenderness may be present.\n2. Rovsing sign can be positive.\n3. Pain always starts in the right iliac fossa.\n4. Perforation increases risk of generalized peritonitis.", "options": ["1, 2, 3 and 4", "2 and 3 only", "1 and 3 only", "1, 2 and 4 only"], "correct": 3}, {"subject": "Surgery", "text": "In a trauma patient, what is the first step in ATLS primary survey?", "options": ["Exposure", "Circulation", "Disability", "Airway with cervical spine protection"], "correct": 3}, {"subject": "Surgery", "text": "A trauma patient has distended neck veins, hypotension, and tracheal deviation after chest injury. Immediate management?", "options": ["Thoracentesis only", "Needle decompression for tension pneumothorax", "Chest tube insertion on opposite side", "IV antibiotics"], "correct": 1}, {"subject": "Surgery", "text": "A burn patient has partial-thickness burns over 30% body surface area. Best initial fluid calculation method?", "options": ["Rule of 9", "Parkland formula", "Glasgow coma scale", "Alvarado score"], "correct": 1}, {"subject": "Surgery", "text": "Regarding burns, which of the following statements are correct?\n1. Parkland formula uses 4 mL/kg/%TBSA.\n2. Half the fluid is given in the first 8 hours.\n3. Full-thickness burns are less painful than superficial burns.\n4. Inhalational injury is never important.", "options": ["2 and 4 only", "1, 2 and 3 only", "1, 2, 3 and 4", "1 and 4 only"], "correct": 1}, {"subject": "Surgery", "text": "A patient has colicky abdominal pain, vomiting, distension, and air-fluid levels on abdominal X-ray. Diagnosis?", "options": ["Acute pancreatitis", "Acute hepatitis", "Perforated ulcer", "Intestinal obstruction"], "correct": 3}, {"subject": "Surgery", "text": "Match the following:\n1. Sliding hernia\n2. Femoral hernia\n3. Obturator hernia\n4. Direct inguinal hernia\n\na. More common in elderly women\nb. May present with medial thigh pain\nc. Rarely has strangulation risk high in women\nd. Part of hernia sac formed by organ wall", "options": ["1-d, 2-a, 3-b, 4-c", "1-a, 2-b, 3-c, 4-d", "1-d, 2-c, 3-b, 4-a", "1-c, 2-a, 3-b, 4-d"], "correct": 0}, {"subject": "Surgery", "text": "A patient with jaundice, pain, fever, and elevated bilirubin with dilated CBD likely has:", "options": ["Choledocholithiasis", "Gilbert syndrome", "Cholelithiasis only", "Acute hepatitis"], "correct": 0}, {"subject": "Surgery", "text": "Regarding thyroid carcinoma, which of the following statements are correct?\n1. Papillary carcinoma is the most common type.\n2. Medullary carcinoma may be associated with MEN 2.\n3. Follicular carcinoma commonly spreads by lymphatics only.\n4. Papillary carcinoma often spreads to cervical lymph nodes.", "options": ["1 and 3 only", "2 and 3 only", "1, 2 and 4 only", "1, 2, 3 and 4"], "correct": 2}, {"subject": "Surgery", "text": "A patient with a solitary thyroid nodule should first undergo:", "options": ["Fine-needle aspiration cytology", "Radioiodine scan for all cases", "PET scan", "Immediate thyroidectomy"], "correct": 0}, {"subject": "Surgery", "text": "A 60-year-old man has weak stream, hesitancy, and nocturia. On DRE, prostate is enlarged, smooth, and rubbery. Diagnosis?", "options": ["Benign prostatic hyperplasia", "Prostate cancer", "Chronic prostatitis", "Bladder stone"], "correct": 0}, {"subject": "Surgery", "text": "In early operable breast cancer, which is increasingly preferred when feasible?", "options": ["Radical mastectomy in all cases", "No axillary staging", "Breast-conserving surgery with adjuvant radiotherapy", "Chemotherapy only"], "correct": 2}, {"subject": "Surgery", "text": "A young man after road traffic accident has a GCS of 7. Best immediate airway step?", "options": ["Endotracheal intubation with cervical spine protection", "Oral feeding", "Nasal packing", "Observe only"], "correct": 0}, {"subject": "Surgery", "text": "A 34-year-old woman has a lump in the breast that is mobile, well-circumscribed, and painless. Most likely diagnosis?", "options": ["Mastitis", "Carcinoma breast", "Fat necrosis", "Fibroadenoma"], "correct": 3}, {"subject": "Obs & Gyne", "text": "A primigravida at 38 weeks has BP 156/102 mmHg and proteinuria. Diagnosis?", "options": ["Chronic hypertension", "Preeclampsia", "Gestational hypertension", "Eclampsia"], "correct": 1}, {"subject": "Obs & Gyne", "text": "A pregnant woman develops generalized tonic-clonic seizure with hypertension and proteinuria. Immediate drug of choice?", "options": ["Phenytoin", "Magnesium sulfate", "Diazepam", "Mannitol"], "correct": 1}, {"subject": "Obs & Gyne", "text": "Regarding preeclampsia, which of the following statements are correct?\n1. It occurs after 20 weeks of gestation.\n2. Proteinuria may be absent in some cases.\n3. Magnesium sulfate is used for seizure prophylaxis.\n4. It is defined only by edema.", "options": ["1, 2, 3 and 4", "1 and 4 only", "2 and 4 only", "1, 2 and 3 only"], "correct": 3}, {"subject": "Obs & Gyne", "text": "A woman at 32 weeks has painless vaginal bleeding and soft uterus on exam. Most likely diagnosis?", "options": ["Vasa previa", "Placenta previa", "Uterine rupture", "Abruptio placentae"], "correct": 1}, {"subject": "Obs & Gyne", "text": "A woman with painful bleeding per vaginum, tender rigid uterus, and fetal distress most likely has:", "options": ["Abruptio placentae", "Placenta previa", "Threatened abortion", "Cervical polyp"], "correct": 0}, {"subject": "Obs & Gyne", "text": "In postpartum hemorrhage due to uterine atony, what is the first uterotonic usually given?", "options": ["Methotrexate", "Oxytocin", "Magnesium sulfate", "Misoprostol only"], "correct": 1}, {"subject": "Obs & Gyne", "text": "Regarding postpartum hemorrhage, which of the following statements are correct?\n1. Tone is the commonest cause.\n2. Retained placental tissue can cause PPH.\n3. Trauma can be a cause.\n4. Thrombin refers to coagulation defects.", "options": ["1, 2 and 3 only", "1 and 4 only", "2 and 3 only", "1, 2, 3 and 4"], "correct": 3}, {"subject": "Obs & Gyne", "text": "A woman has painful menstrual periods, deep dyspareunia, and infertility. Most likely diagnosis?", "options": ["Fibroid uterus", "PCOS", "Endometriosis", "Adenomyosis"], "correct": 2}, {"subject": "Obs & Gyne", "text": "CTG shows persistent late decelerations with reduced variability. This is most suggestive of:", "options": ["Maternal tachycardia", "Normal fetal tracing", "Fetal distress", "Early labor only"], "correct": 2}, {"subject": "Obs & Gyne", "text": "A primigravida in labor has cervical dilation from 4 to 10 cm. This belongs to which stage?", "options": ["Second stage", "Third stage", "Fourth stage", "First stage"], "correct": 3}, {"subject": "Obs & Gyne", "text": "Match the following:\n1. Bishop score\n2. Partograph\n3. Anti-D\n4. Quad test\n\na. Predicts cervical favorability\nb. Detects Rh sensitization prevention\nc. Assesses labor progress\nd. Prenatal screening for aneuploidy", "options": ["1-d, 2-c, 3-b, 4-a", "1-c, 2-a, 3-b, 4-d", "1-a, 2-b, 3-c, 4-d", "1-a, 2-c, 3-b, 4-d"], "correct": 3}, {"subject": "Obs & Gyne", "text": "A woman with ectopic pregnancy has amenorrhea, lower abdominal pain, and spotting. Most likely site?", "options": ["Ampulla of fallopian tube", "Peritoneum only", "Cervix", "Ovary"], "correct": 0}, {"subject": "Obs & Gyne", "text": "Regarding ectopic pregnancy, which of the following statements are correct?\n1. Tubal pregnancy is the commonest.\n2. Rupture can cause shock.\n3. Serum beta-hCG helps in diagnosis.\n4. It is managed only by hysterectomy.", "options": ["1, 2 and 3 only", "1, 2, 3 and 4", "2 and 4 only", "1 and 4 only"], "correct": 0}, {"subject": "Obs & Gyne", "text": "A woman has grape-like vesicles on ultrasound and very high beta-hCG. Diagnosis?", "options": ["Missed abortion", "Placenta previa", "Fibroid degeneration", "Molar pregnancy"], "correct": 3}, {"subject": "Obs & Gyne", "text": "Best definitive management of complete hydatidiform mole after suction evacuation?", "options": ["Routine hysterectomy in all", "Weekly blood pressure monitoring only", "Immediate radiotherapy", "Serial beta-hCG follow-up"], "correct": 3}, {"subject": "Obs & Gyne", "text": "A woman with PCOS is likely to have:", "options": ["Low LH:FSH ratio", "Early menopause always", "Oligo-ovulation and hyperandrogenism", "Low androgen levels"], "correct": 2}, {"subject": "Obs & Gyne", "text": "Regarding PCOS, which of the following statements are correct?\n1. Rotterdam criteria are commonly used.\n2. Two out of three criteria are enough for diagnosis.\n3. Polycystic ovaries on ultrasound alone confirm the diagnosis.\n4. Metformin may be used in insulin resistance.", "options": ["1, 2 and 4 only", "1 and 3 only", "2 and 3 only", "1, 2, 3 and 4"], "correct": 0}, {"subject": "Obs & Gyne", "text": "A pregnant woman with Rh-negative blood has an Rh-positive partner. Which is given to prevent isoimmunization?", "options": ["Oxytocin", "RhIG only after newborn jaundice", "Folic acid", "Anti-D immunoglobulin"], "correct": 3}, {"subject": "Obs & Gyne", "text": "Which screening test is now widely used for cervical cancer screening in many settings due to higher sensitivity?", "options": ["Endometrial biopsy", "CA-125", "HPV DNA testing", "Pap smear only"], "correct": 2}, {"subject": "Obs & Gyne", "text": "A woman in labor has shoulder dystocia after head delivery. First maneuver?", "options": ["Kristeller expression", "Zavanelli maneuver", "Internal podalic version", "McRoberts maneuver"], "correct": 3}, {"subject": "Pathology", "text": "A cell undergoes swelling, membrane damage, and nuclear pyknosis after severe hypoxia. This is most consistent with:", "options": ["Necrosis", "Autophagy", "Metaplasia", "Apoptosis"], "correct": 0}, {"subject": "Pathology", "text": "Regarding apoptosis, which of the following statements are correct?\n1. It is a programmed cell death.\n2. It usually causes inflammation.\n3. It can occur in normal physiologic processes.\n4. Cell shrinkage is a feature.", "options": ["1, 2, 3 and 4", "2 and 4 only", "1, 3 and 4 only", "1 and 2 only"], "correct": 2}, {"subject": "Pathology", "text": "Histology shows central amorphous eosinophilic granular debris with preserved tissue architecture in infarcted tissue. What is this necrosis?", "options": ["Fat necrosis", "Gangrenous necrosis", "Caseous necrosis", "Fibrinoid necrosis"], "correct": 2}, {"subject": "Pathology", "text": "A 28-year-old woman has fever, pain, and redness at a wound site. The first cellular response in acute inflammation is mainly:", "options": ["Neutrophils", "Eosinophils", "Fibroblasts", "Plasma cells"], "correct": 0}, {"subject": "Pathology", "text": "Regarding acute inflammation, which of the following statements are correct?\n1. Vasodilation occurs early.\n2. Histamine is a mediator.\n3. Neutrophils are early cells.\n4. Fibrosis is the immediate main event.", "options": ["1, 2, 3 and 4", "1, 2 and 3 only", "2 and 4 only", "1 and 4 only"], "correct": 1}, {"subject": "Pathology", "text": "A granuloma with caseation necrosis is most typical of:", "options": ["Crohn disease", "Tuberculosis", "Sarcoidosis", "Foreign body reaction"], "correct": 1}, {"subject": "Pathology", "text": "A tumor suppressor gene commonly associated with many cancers is:", "options": ["RAS", "TP53", "MYC", "BCR-ABL"], "correct": 1}, {"subject": "Pathology", "text": "Which is a hallmark of malignant tumor rather than benign tumor?", "options": ["Encapsulation always present", "Slow growth always", "Invasion and metastasis", "Well circumscribed growth"], "correct": 2}, {"subject": "Pathology", "text": "Match the following:\n1. AFP\n2. CEA\n3. CA-125\n4. PSA\n\na. Ovarian carcinoma\nb. Hepatocellular carcinoma\nc. Prostate cancer\nd. Colorectal cancer", "options": ["1-b, 2-d, 3-a, 4-c", "1-d, 2-c, 3-a, 4-b", "1-a, 2-b, 3-d, 4-c", "1-b, 2-a, 3-d, 4-c"], "correct": 0}, {"subject": "Pathology", "text": "A child has pallor, microcytic hypochromic anemia, and low ferritin. Most likely diagnosis?", "options": ["Megaloblastic anemia", "Iron deficiency anemia", "Thalassemia major", "Aplastic anemia"], "correct": 1}, {"subject": "Pathology", "text": "Regarding iron deficiency anemia, which of the following statements are correct?\n1. Ferritin is low.\n2. TIBC is usually high.\n3. Serum iron is low.\n4. MCV is always increased.", "options": ["1 and 4 only", "2 and 4 only", "1, 2, 3 and 4", "1, 2 and 3 only"], "correct": 3}, {"subject": "Pathology", "text": "A patient with jaundice has spherocytes on smear and positive Coombs test. Diagnosis?", "options": ["Autoimmune hemolytic anemia", "Thalassemia", "Hereditary spherocytosis", "G6PD deficiency"], "correct": 0}, {"subject": "Pathology", "text": "A child with painful swelling of joints, recurrent infections, and sickle cells on smear most likely has:", "options": ["Hemophilia A", "Polycythemia vera", "Sickle cell anemia", "Iron deficiency anemia"], "correct": 2}, {"subject": "Pathology", "text": "A patient has blasts in peripheral blood, anemia, thrombocytopenia, and bleeding gums. Diagnosis most likely:", "options": ["CLL", "CML", "Polycythemia vera", "AML"], "correct": 3}, {"subject": "Pathology", "text": "A young child with mediastinal mass, TDT positive blasts, and CNS prophylaxis requirement most likely has:", "options": ["Hairy cell leukemia", "AML", "ALL", "CML"], "correct": 2}, {"subject": "Pediatrics", "text": "A term newborn is not breathing and has poor tone immediately after delivery. The first step in neonatal resuscitation is:", "options": ["Warm, dry, position airway, clear secretions if needed, stimulate", "Give adrenaline", "Start IV fluids", "Chest compressions"], "correct": 0}, {"subject": "Pediatrics", "text": "Regarding APGAR score, which of the following statements are correct?\n1. It is assessed at 1 and 5 minutes.\n2. It includes heart rate, respiration, tone, reflex irritability, and color.\n3. It is used to diagnose congenital heart disease.\n4. A low score suggests need for resuscitation support.", "options": ["1 and 3 only", "1, 2, 3 and 4", "2 and 3 only", "1, 2 and 4 only"], "correct": 3}, {"subject": "Pediatrics", "text": "A neonate develops jaundice within 24 hours of birth. This is most likely:", "options": ["Pathological jaundice", "Breast milk jaundice", "Breastfeeding jaundice only", "Physiological jaundice"], "correct": 0}, {"subject": "Pediatrics", "text": "A preterm baby with grunting, retractions, and ground-glass appearance on chest X-ray most likely has:", "options": ["Transient tachypnea of newborn", "Meconium aspiration syndrome", "Respiratory distress syndrome", "Bronchiolitis"], "correct": 2}, {"subject": "Pediatrics", "text": "Chest X-ray shows hyperinflation with patchy infiltrates in a term baby born with meconium-stained liquor. Diagnosis?", "options": ["Meconium aspiration syndrome", "RDS", "Neonatal pneumonia", "TTN"], "correct": 0}, {"subject": "Pediatrics", "text": "Regarding neonatal jaundice, which of the following statements are correct?\n1. Physiological jaundice usually appears after 24 hours.\n2. Pathological jaundice may occur within the first day of life.\n3. Conjugated hyperbilirubinemia is never serious.\n4. Kernicterus is a feared complication.", "options": ["2 and 3 only", "1, 2 and 4 only", "1, 2, 3 and 4", "1 and 3 only"], "correct": 1}, {"subject": "Pediatrics", "text": "A 2-month-old infant has poor weight gain, loose skin, and visible ribs. Most likely diagnosis?", "options": ["Kwashiorkor", "Vitamin D deficiency", "Marasmus", "Rickets"], "correct": 2}, {"subject": "Pediatrics", "text": "Which vaccine is given at birth under the routine immunization schedule?", "options": ["Pentavalent", "IPV booster", "BCG", "MR"], "correct": 2}, {"subject": "Pediatrics", "text": "Regarding the national immunization schedule, which of the following statements are correct?\n1. BCG is given at birth.\n2. Pentavalent vaccine includes DPT, Hep B, and Hib.\n3. Measles-containing vaccine is given at 9 months.\n4. Rotavirus vaccine is given only in adults.", "options": ["2 and 4 only", "1, 2, 3 and 4", "1, 2 and 3 only", "1 and 4 only"], "correct": 2}, {"subject": "Pediatrics", "text": "A child has a barking cough, stridor, and hoarseness. Most likely diagnosis?", "options": ["Asthma", "Epiglottitis", "Bronchiolitis", "Croup"], "correct": 3}, {"subject": "Pediatrics", "text": "A child with fever, rash, conjunctivitis, and strawberry tongue most likely has:", "options": ["Scarlet fever", "Rubella", "Kawasaki disease", "Measles"], "correct": 2}, {"subject": "Pediatrics", "text": "A child with severe dehydration and shock should first receive:", "options": ["IV bolus isotonic fluid", "Oral rehydration solution", "Antibiotics only", "No fluids until labs return"], "correct": 0}, {"subject": "Pediatrics", "text": "A child with recurrent episodes of diarrhea, abdominal distension, and failure to thrive is found to have celiac disease. Which test is most useful initially?", "options": ["Serum amylase", "RF", "ANA", "Anti-tTG IgA"], "correct": 3}, {"subject": "Pediatrics", "text": "A newborn has a loud murmur and cyanosis. The next best step in suspected congenital heart disease is:", "options": ["EEG", "Colonoscopy", "Immediate tonsillectomy", "Echocardiography"], "correct": 3}, {"subject": "Pediatrics", "text": "Match the following:\n1. Marasmus\n2. Kwashiorkor\n3. Rickets\n4. Scabies\n\na. Edema, hair changes\nb. Calorie deficiency, severe wasting\nc. Vitamin D deficiency\nd. Pruritic burrows", "options": ["1-c, 2-a, 3-b, 4-d", "1-b, 2-a, 3-c, 4-d", "1-b, 2-c, 3-a, 4-d", "1-a, 2-b, 3-d, 4-c"], "correct": 1}, {"subject": "Pharmacology", "text": "A patient with anaphylaxis after a bee sting should be given first:", "options": ["Nebulized salbutamol only", "IV hydrocortisone", "Oral cetirizine", "IM adrenaline"], "correct": 3}, {"subject": "Pharmacology", "text": "Regarding atropine, which of the following statements are correct?\n1. It is an antimuscarinic drug.\n2. It can cause mydriasis.\n3. It increases salivary secretion.\n4. It may be used in bradycardia.", "options": ["1, 2, 3 and 4", "2 and 3 only", "1 and 3 only", "1, 2 and 4 only"], "correct": 3}, {"subject": "Pharmacology", "text": "A patient with organophosphate poisoning is best treated with:", "options": ["Pyridostigmine only", "Neostigmine alone", "Atropine and pralidoxime", "Physostigmine and atropine"], "correct": 2}, {"subject": "Pharmacology", "text": "Which drug is used in hypertensive emergency?", "options": ["Oral amlodipine", "Oral propranolol", "Digoxin", "IV labetalol"], "correct": 3}, {"subject": "Pharmacology", "text": "Regarding beta blockers, which of the following statements are correct?\n1. Propranolol is non-selective.\n2. Atenolol is beta-1 selective.\n3. Beta blockers may worsen bronchospasm.\n4. They are never used in myocardial infarction.", "options": ["1, 2 and 3 only", "1, 2, 3 and 4", "2 and 4 only", "1 and 4 only"], "correct": 0}, {"subject": "Pharmacology", "text": "A patient with migraine and asthma should avoid:", "options": ["Sumatriptan", "Propranolol", "Paracetamol", "Amitriptyline"], "correct": 1}, {"subject": "Pharmacology", "text": "Match the following:\n1. Warfarin\n2. Heparin\n3. Streptokinase\n4. Clopidogrel\n\na. Thrombolytic\nb. Antiplatelet\nc. Oral anticoagulant\nd. Parenteral anticoagulant", "options": ["1-b, 2-d, 3-c, 4-a", "1-c, 2-a, 3-d, 4-b", "1-d, 2-c, 3-b, 4-a", "1-c, 2-d, 3-a, 4-b"], "correct": 3}, {"subject": "Pharmacology", "text": "A patient on warfarin requires reversal due to bleeding. Best immediate antidote?", "options": ["Vitamin K", "Flumazenil", "Naloxone", "Protamine sulfate"], "correct": 0}, {"subject": "Pharmacology", "text": "Regarding aminoglycosides, which of the following statements are correct?\n1. Nephrotoxicity is a major adverse effect.\n2. They are active against aerobic gram-negative bacilli.\n3. They are orally well absorbed.\n4. Ototoxicity can occur.", "options": ["1, 2, 3 and 4", "1 and 3 only", "1, 2 and 4 only", "2 and 3 only"], "correct": 2}, {"subject": "Pharmacology", "text": "A patient with tuberculosis is started on treatment and develops orange discoloration of body fluids. Which drug causes this?", "options": ["Pyrazinamide", "Rifampicin", "Ethambutol", "Isoniazid"], "correct": 1}, {"subject": "PSM", "text": "In a case-control study, the measure of association is:", "options": ["Attributable proportion", "Odds ratio", "Relative risk", "Risk difference"], "correct": 1}, {"subject": "PSM", "text": "Regarding screening tests, which of the following statements are correct?\n1. Sensitivity is the ability to detect disease in diseased persons.\n2. Specificity is the ability to detect non-disease in healthy persons.\n3. PPV depends on disease prevalence.\n4. A highly sensitive test helps rule in disease.", "options": ["1 and 4 only", "1, 2 and 3 only", "1, 2, 3 and 4", "2 and 4 only"], "correct": 1}, {"subject": "PSM", "text": "A population has 30 new cases of a disease in 1000 people over 1 year. This is:", "options": ["Incidence", "Prevalence", "Case fatality rate", "Mortality rate"], "correct": 0}, {"subject": "PSM", "text": "Which study design is best to investigate a rare disease?", "options": ["Cohort study", "Cross-sectional study", "Ecological study", "Case-control study"], "correct": 3}, {"subject": "PSM", "text": "A 5-year-old child receives BCG at birth, then the next vaccine in routine schedule at 6 weeks. Which of the following is part of that 6-week visit?", "options": ["Measles vaccine", "Yellow fever vaccine", "Typhoid vaccine", "Pentavalent vaccine"], "correct": 3}, {"subject": "PSM", "text": "Regarding vaccines, which of the following statements are correct?\n1. BCG is a live vaccine.\n2. OPV is a live vaccine.\n3. Pentavalent includes DPT, Hep B, and Hib.\n4. MR vaccine protects against measles and rubella.", "options": ["1, 2 and 4 only", "1, 2, 3 and 4", "1 and 4 only", "2 and 3 only"], "correct": 1}, {"subject": "PSM", "text": "The cold chain temperature for most vaccines is:", "options": ["0 degC to 4 degC", "2 degC to 8 degC", "-20 degC to -10 degC", "15 degC to 25 degC"], "correct": 1}, {"subject": "PSM", "text": "A child with severe acute malnutrition is most likely to have:", "options": ["Weight-for-age above 2 SD", "Weight-for-height below -3 Z score or MUAC below 11.5 cm", "Height above +3 Z score", "BMI always normal"], "correct": 1}, {"subject": "PSM", "text": "Regarding vitamin A prophylaxis in children, which of the following statements are correct?\n1. It is part of child nutrition programs.\n2. Deficiency can cause night blindness.\n3. It is used only for adults.\n4. Severe deficiency can damage the eye.", "options": ["1, 2, 3 and 4", "1 and 3 only", "2 and 3 only", "1, 2 and 4 only"], "correct": 3}, {"subject": "PSM", "text": "A child with bowing of legs, delayed dentition, and rachitic rosary most likely has:", "options": ["Vitamin C deficiency", "Vitamin A toxicity", "Vitamin D deficiency", "Iron deficiency"], "correct": 2}, {"subject": "Microbiology", "text": "A Gram-positive cocci in clusters is most likely:", "options": ["Neisseria gonorrhoeae", "Staphylococcus aureus", "Streptococcus pyogenes", "Enterococcus faecalis"], "correct": 1}, {"subject": "Microbiology", "text": "Regarding Staphylococcus aureus, which of the following statements are correct?\n1. It is catalase positive.\n2. It is coagulase positive.\n3. It can produce toxic shock syndrome toxin.\n4. It is always alpha hemolytic.", "options": ["1, 2 and 3 only", "1, 2, 3 and 4", "2 and 4 only", "1 and 4 only"], "correct": 0}, {"subject": "Microbiology", "text": "An organism producing swarming motility on culture is:", "options": ["Proteus mirabilis", "E. coli", "Klebsiella pneumoniae", "Pseudomonas aeruginosa"], "correct": 0}, {"subject": "Microbiology", "text": "A patient has chronic cough, weight loss, and positive Ziehl-Neelsen stain. Most likely organism?", "options": ["Nocardia asteroides", "Actinomyces israelii", "Corynebacterium diphtheriae", "Mycobacterium tuberculosis"], "correct": 3}, {"subject": "Microbiology", "text": "Regarding Mycobacterium tuberculosis, which of the following statements are correct?\n1. It is acid-fast bacillus.\n2. It grows slowly.\n3. GeneXpert can detect rifampicin resistance.\n4. It is a virus.", "options": ["2 and 4 only", "1, 2, 3 and 4", "1 and 4 only", "1, 2 and 3 only"], "correct": 3}, {"subject": "Microbiology", "text": "India ink preparation shows encapsulated budding yeast. Diagnosis?", "options": ["Cryptococcus neoformans", "Aspergillus flavus", "Candida albicans", "Mucor"], "correct": 0}, {"subject": "Microbiology", "text": "A patient with HIV has CD4 count below 200 and oral thrush. Which opportunistic infection is classically associated with HIV?", "options": ["Impetigo", "Cryptococcal meningitis", "Tetanus", "Typhoid fever"], "correct": 1}, {"subject": "Microbiology", "text": "Regarding hepatitis B serology, which of the following statements are correct?\n1. HBsAg indicates current infection.\n2. Anti-HBs indicates immunity.\n3. HBeAg suggests high infectivity.\n4. Anti-HBc IgM suggests acute infection.", "options": ["1 and 2 only", "1, 3 and 4 only", "1, 2, 3 and 4", "2 and 4 only"], "correct": 2}, {"subject": "Microbiology", "text": "A peripheral smear shows ring forms inside RBCs and banana-shaped gametocytes. Organism?", "options": ["Toxoplasma gondii", "Leishmania donovani", "Plasmodium falciparum", "Plasmodium vivax"], "correct": 2}, {"subject": "Microbiology", "text": "Match the following:\n1. MacConkey agar\n2. Lowenstein-Jensen medium\n3. Chocolate agar\n4. India ink\n\na. TB culture\nb. Encapsulated Cryptococcus\nc. Fastidious organisms like Haemophilus\nd. Gram-negative enteric bacilli", "options": ["1-c, 2-a, 3-d, 4-b", "1-d, 2-c, 3-a, 4-b", "1-d, 2-a, 3-c, 4-b", "1-a, 2-d, 3-c, 4-b"], "correct": 2}, {"subject": "Anatomy", "text": "A fracture of the surgical neck of humerus is most likely to injure which nerve?", "options": ["Median nerve", "Radial nerve", "Ulnar nerve", "Axillary nerve"], "correct": 3}, {"subject": "Anatomy", "text": "Regarding the brachial plexus, which of the following statements are correct?\n1. It is formed by C5-T1.\n2. The lateral cord gives the musculocutaneous nerve.\n3. The posterior cord gives the radial nerve.\n4. The long thoracic nerve arises from the posterior cord.", "options": ["1, 2 and 3 only", "1, 2, 3 and 4", "2 and 4 only", "1 and 4 only"], "correct": 0}, {"subject": "Anatomy", "text": "A child with Erb palsy most likely has injury to:", "options": ["Lower trunk of brachial plexus", "Upper trunk of brachial plexus", "Median nerve at wrist", "Radial nerve at spiral groove"], "correct": 1}, {"subject": "Anatomy", "text": "A patient cannot extend wrist after humeral shaft fracture. Which nerve is damaged?", "options": ["Axillary nerve", "Musculocutaneous nerve", "Ulnar nerve", "Radial nerve"], "correct": 3}, {"subject": "Anatomy", "text": "\"Ape hand\" deformity is caused by injury to:", "options": ["Radial nerve", "Median nerve", "Ulnar nerve", "Axillary nerve"], "correct": 1}, {"subject": "Anatomy", "text": "Regarding the ulnar nerve, which of the following statements are correct?\n1. It passes behind the medial epicondyle.\n2. Injury can cause claw hand.\n3. It supplies the interossei.\n4. It is the main nerve of thenar muscles.", "options": ["2 and 4 only", "1, 2, 3 and 4", "1, 2 and 3 only", "1 and 4 only"], "correct": 2}, {"subject": "Anatomy", "text": "The anatomical snuffbox contains:", "options": ["Median nerve", "Radial artery", "Ulnar artery", "Cephalic vein only"], "correct": 1}, {"subject": "Anatomy", "text": "A femoral triangle is bounded by:", "options": ["Adductor magnus, sartorius, quadriceps tendon", "Inguinal ligament, pectineus, iliopsoas", "Inguinal ligament, sartorius, adductor longus", "Sartorius, gracilis, rectus femoris"], "correct": 2}, {"subject": "Anatomy", "text": "Match the following:\n1. Femoral nerve\n2. Obturator nerve\n3. Sciatic nerve\n4. Common peroneal nerve\n\na. Foot drop\nb. Thigh adductors\nc. Posterior thigh muscles\nd. Anterior thigh muscles", "options": ["1-d, 2-b, 3-c, 4-a", "1-d, 2-c, 3-b, 4-a", "1-b, 2-d, 3-c, 4-a", "1-a, 2-b, 3-c, 4-d"], "correct": 0}, {"subject": "Anatomy", "text": "A patient has foot drop after injury near fibular neck. Most likely nerve?", "options": ["Obturator nerve", "Femoral nerve", "Common peroneal nerve", "Tibial nerve"], "correct": 2}, {"subject": "Physiology", "text": "The SA node normally acts as the pacemaker because it has:", "options": ["Highest resting membrane potential", "Lowest threshold", "Fastest spontaneous depolarization", "Maximum contractile force"], "correct": 2}, {"subject": "Physiology", "text": "Regarding the cardiac cycle, which of the following statements are correct?\n1. First heart sound is due to closure of AV valves.\n2. Second heart sound is due to closure of semilunar valves.\n3. Systole is longer than diastole at rest.\n4. Isovolumetric contraction occurs before semilunar valve opening.", "options": ["2 and 3 only", "1 and 3 only", "1, 2, 3 and 4", "1, 2 and 4 only"], "correct": 3}, {"subject": "Physiology", "text": "A pressure-volume loop is shifted upward and to the right in:", "options": ["Increased contractility", "Increased stroke volume with no change in pressure", "Decreased afterload", "Aortic stenosis"], "correct": 3}, {"subject": "Physiology", "text": "A patient stands up suddenly and BP falls briefly. The reflex restoring BP is:", "options": ["Bainbridge reflex", "Baroreceptor reflex", "Hering-Breuer reflex", "Chemoreceptor reflex"], "correct": 1}, {"subject": "Physiology", "text": "Regarding the oxygen-hemoglobin dissociation curve, which of the following statements are correct?\n1. Right shift reduces Hb affinity for oxygen.\n2. Acidosis shifts the curve to the right.\n3. Fetal hemoglobin causes a left shift.\n4. CO2 has no effect on the curve.", "options": ["1, 2 and 3 only", "1 and 4 only", "1, 2, 3 and 4", "2 and 4 only"], "correct": 0}, {"subject": "Physiology", "text": "A patient has low oxygen saturation at high altitude mainly due to:", "options": ["Increased PaCO2", "Reduced atmospheric pressure", "Increased hemoglobin degradation", "Increased alveolar oxygen tension"], "correct": 1}, {"subject": "Physiology", "text": "Spirometry shows reduced FEV1/FVC with reversible improvement after bronchodilator. Diagnosis?", "options": ["Asthma", "Restrictive lung disease", "Pleural effusion", "Pneumothorax"], "correct": 0}, {"subject": "Physiology", "text": "Regarding renal clearance, which of the following statements are correct?\n1. Inulin clearance equals GFR.\n2. Creatinine clearance approximates GFR.\n3. PAH clearance estimates renal plasma flow.\n4. Glucose clearance is always higher than GFR.", "options": ["1, 2, 3 and 4", "1 and 4 only", "1, 2 and 3 only", "2 and 4 only"], "correct": 2}, {"subject": "Physiology", "text": "A patient with metabolic acidosis and Kussmaul breathing most likely has:", "options": ["Renal compensation for acidosis", "Normal acid-base status", "Primary respiratory acidosis", "Compensated respiratory alkalosis"], "correct": 0}, {"subject": "Physiology", "text": "Match the following:\n1. Aldosterone\n2. ADH\n3. ANP\n4. PTH\n\na. Increases sodium reabsorption\nb. Increases water reabsorption\nc. Promotes natriuresis\nd. Increases calcium reabsorption", "options": ["1-c, 2-b, 3-a, 4-d", "1-a, 2-b, 3-c, 4-d", "1-b, 2-a, 3-c, 4-d", "1-a, 2-c, 3-b, 4-d"], "correct": 1}, {"subject": "Biochemistry", "text": "The rate-limiting enzyme of glycolysis is:", "options": ["Hexokinase", "Phosphofructokinase-1", "Glucose-6-phosphatase", "Pyruvate kinase"], "correct": 1}, {"subject": "Biochemistry", "text": "Regarding the TCA cycle, which of the following statements are correct?\n1. It occurs in mitochondria.\n2. Isocitrate dehydrogenase is a rate-limiting enzyme.\n3. It directly produces large amounts of ATP by substrate-level phosphorylation.\n4. Succinyl-CoA synthetase is involved in the cycle.", "options": ["1, 2, 3 and 4", "1 and 3 only", "2 and 3 only", "1, 2 and 4 only"], "correct": 3}, {"subject": "Biochemistry", "text": "A child with fasting hypoglycemia and hepatomegaly is most likely to have deficiency of:", "options": ["Glycogen phosphorylase", "Glucose-6-phosphatase", "Fructokinase", "Pyruvate dehydrogenase"], "correct": 1}, {"subject": "Biochemistry", "text": "The rate-limiting enzyme of the HMP shunt is:", "options": ["Transketolase", "Aldolase", "Glucose-6-phosphate dehydrogenase", "6-phosphogluconate dehydrogenase"], "correct": 2}, {"subject": "Biochemistry", "text": "Regarding vitamin B12, which of the following statements are correct?\n1. It is required for DNA synthesis.\n2. It is absorbed in the terminal ileum.\n3. Its deficiency can cause neurologic symptoms.\n4. It is the same as folate.", "options": ["2 and 4 only", "1, 2, 3 and 4", "1, 2 and 3 only", "1 and 4 only"], "correct": 2}, {"subject": "Biochemistry", "text": "A patient with megaloblastic anemia and neuropathy is most likely deficient in:", "options": ["Iron", "Vitamin B12", "Vitamin C", "Vitamin A"], "correct": 1}, {"subject": "Biochemistry", "text": "The coenzyme form of thiamine is:", "options": ["PLP", "NAD", "FAD", "TPP"], "correct": 3}, {"subject": "Biochemistry", "text": "A child with maple syrup odor and lethargy most likely has deficiency of:", "options": ["Cystathionine beta-synthase", "Phenylalanine hydroxylase", "Branched-chain alpha-ketoacid dehydrogenase", "Homogentisate oxidase"], "correct": 2}, {"subject": "Biochemistry", "text": "Regarding phenylketonuria, which of the following statements are correct?\n1. It is due to phenylalanine hydroxylase deficiency.\n2. It may cause intellectual disability if untreated.\n3. It is a disorder of amino acid metabolism.\n4. It presents with low phenylalanine levels.", "options": ["1, 2 and 3 only", "1 and 4 only", "2 and 4 only", "1, 2, 3 and 4"], "correct": 0}, {"subject": "Biochemistry", "text": "Vitamin C deficiency causes:", "options": ["Rickets", "Night blindness", "Scurvy", "Pellagra"], "correct": 2}, {"subject": "ENT", "text": "A patient has conductive hearing loss. Rinne test is negative on the affected side. This suggests:", "options": ["Sensorineural hearing loss", "Retrocochlear lesion", "Normal hearing", "Conductive hearing loss"], "correct": 3}, {"subject": "ENT", "text": "Regarding Meniere disease, which of the following statements are correct?\n1. It causes episodic vertigo.\n2. It is associated with tinnitus.\n3. Hearing loss is typically sensorineural.\n4. It is diagnosed by chest X-ray.", "options": ["1, 2, 3 and 4", "1, 2 and 3 only", "2 and 4 only", "1 and 4 only"], "correct": 1}, {"subject": "ENT", "text": "A child with unilateral foul-smelling nasal discharge most likely has:", "options": ["Allergic rhinitis", "Nasal foreign body", "Sinus tumor", "Deviated nasal septum"], "correct": 1}, {"subject": "ENT", "text": "The most commonly involved sinus in acute sinusitis is:", "options": ["Sphenoid sinus", "Maxillary sinus", "Ethmoid sinus", "Frontal sinus"], "correct": 1}, {"subject": "ENT", "text": "A grayish-white pseudomembrane over the tonsils with bull neck is seen. Diagnosis?", "options": ["Tonsillolith", "Infectious mononucleosis", "Scarlet fever", "Diphtheria"], "correct": 3}, {"subject": "ENT", "text": "Regarding epistaxis, which of the following statements are correct?\n1. Little's area is a common site of anterior epistaxis.\n2. Posterior epistaxis is usually more severe.\n3. Woodruff plexus is related to posterior epistaxis.\n4. Epistaxis is never seen in hypertension.", "options": ["1 and 4 only", "2 and 4 only", "1, 2, 3 and 4", "1, 2 and 3 only"], "correct": 3}, {"subject": "ENT", "text": "A hoarse voice after thyroid surgery suggests injury to:", "options": ["Recurrent laryngeal nerve", "Superior laryngeal nerve", "Facial nerve", "Glossopharyngeal nerve"], "correct": 0}, {"subject": "Orthopedics", "text": "A Colles fracture is classically associated with:", "options": ["Surgical neck injury", "Volar displacement", "Dorsal displacement and dinner fork deformity", "Shaft of ulna fracture only"], "correct": 2}, {"subject": "Orthopedics", "text": "Regarding supracondylar fracture of humerus, which of the following statements are correct?\n1. It is common in children.\n2. It may injure the brachial artery.\n3. Volkmann ischemic contracture is a complication.\n4. It commonly causes foot drop.", "options": ["1, 2 and 3 only", "2 and 4 only", "1 and 4 only", "1, 2, 3 and 4"], "correct": 0}, {"subject": "Orthopedics", "text": "A child with limp, short femur, and \"Galeazzi sign\" is likely to have:", "options": ["Clubfoot", "Osteosarcoma", "DDH", "Perthes disease"], "correct": 2}, {"subject": "Orthopedics", "text": "The most common primary bone tumor in adolescents is:", "options": ["Osteosarcoma", "Giant cell tumor", "Ewing sarcoma", "Osteoid osteoma"], "correct": 0}, {"subject": "Orthopedics", "text": "Regarding osteosarcoma, which of the following statements are correct?\n1. It commonly involves metaphysis.\n2. Sunburst appearance may be seen on X-ray.\n3. Codman triangle may be present.\n4. It is always benign.", "options": ["1, 2 and 3 only", "1, 2, 3 and 4", "2 and 4 only", "1 and 4 only"], "correct": 0}, {"subject": "Orthopedics", "text": "An X-ray showing layered onion-skin periosteal reaction suggests:", "options": ["Ewing sarcoma", "Chondrosarcoma", "Giant cell tumor", "Osteochondroma"], "correct": 0}, {"subject": "Orthopedics", "text": "A patient with shoulder pain and inability to abduct arm after dislocation most likely has injury to:", "options": ["Median nerve", "Radial nerve", "Axillary nerve", "Ulnar nerve"], "correct": 2}, {"subject": "Radiology", "text": "A chest X-ray showing pleural meniscus and blunting of costophrenic angle suggests:", "options": ["Pneumothorax", "Pleural effusion", "COPD", "Pulmonary edema"], "correct": 1}, {"subject": "Radiology", "text": "Regarding chest X-ray signs, which of the following statements are correct?\n1. Air bronchogram is seen in consolidation.\n2. Silhouette sign helps localize lesions.\n3. Cardiothoracic ratio is used to assess cardiomegaly.\n4. Ground-glass opacity is a plain X-ray diagnosis only.", "options": ["1, 2 and 3 only", "1 and 4 only", "2 and 4 only", "1, 2, 3 and 4"], "correct": 0}, {"subject": "Radiology", "text": "In a non-contrast CT brain, acute intracranial hemorrhage appears:", "options": ["Isointense to CSF", "Hyperdense", "Hypodense", "Always invisible"], "correct": 1}, {"subject": "Radiology", "text": "Which imaging modality is preferred initially for gallstones?", "options": ["MRI", "Plain X-ray", "Ultrasound", "PET scan"], "correct": 2}, {"subject": "Radiology", "text": "Regarding MRI, which of the following statements are correct?\n1. T1-weighted images show fat as bright.\n2. T2-weighted images show fluid as bright.\n3. DWI is useful in acute stroke.\n4. CT is superior to MRI for all soft tissue lesions.", "options": ["1, 2 and 3 only", "1 and 4 only", "1, 2, 3 and 4", "2 and 4 only"], "correct": 0}, {"subject": "Radiology", "text": "A patient with suspected pulmonary embolism is best evaluated with:", "options": ["CT pulmonary angiography", "Ultrasound abdomen", "Skull X-ray", "Barium swallow"], "correct": 0}, {"subject": "Radiology", "text": "A radiograph shows double-bubble sign. Diagnosis?", "options": ["Malrotation only", "Duodenal atresia", "Hirschsprung disease", "Pyloric stenosis"], "correct": 1}, {"subject": "Anesthesia", "text": "The best bedside test to predict difficult laryngoscopy is:", "options": ["Rinne test", "Weber test", "Snellen chart", "Mallampati classification"], "correct": 3}, {"subject": "Anesthesia", "text": "Regarding general anesthesia, which of the following statements are correct?\n1. Propofol is used for induction.\n2. Succinylcholine is a depolarizing muscle relaxant.\n3. Dantrolene is used in malignant hyperthermia.\n4. Capnography helps confirm endotracheal tube placement.", "options": ["1 and 4 only", "1, 2, 3 and 4", "1, 2 and 4 only", "2 and 3 only"], "correct": 1}, {"subject": "Anesthesia", "text": "A patient develops muscle rigidity, rising ETCO2, and hyperthermia during surgery. Best drug:", "options": ["Flumazenil", "Naloxone", "Atropine", "Dantrolene"], "correct": 3}, {"subject": "Anesthesia", "text": "Which local anesthetic toxicity is most concerning?", "options": ["Jaundice only", "Tinnitus, seizures, cardiac arrhythmia", "Constipation only", "Mydriasis only"], "correct": 1}, {"subject": "Anesthesia", "text": "Regarding spinal anesthesia, which of the following statements are correct?\n1. It is a form of neuraxial block.\n2. Post-dural puncture headache may occur.\n3. Hypotension can occur.\n4. It is always safer than general anesthesia in every patient.", "options": ["2 and 4 only", "1, 2, 3 and 4", "1, 2 and 3 only", "1 and 4 only"], "correct": 2}, {"subject": "Anesthesia", "text": "A patient with suspected aspiration during induction should be managed initially by:", "options": ["Immediate extubation", "Oral fluids", "Suction and secure airway with 100% oxygen", "Wait for spontaneous recovery only"], "correct": 2}, {"subject": "Psychiatry", "text": "A patient believes strangers are controlling his thoughts. This is:", "options": ["Phobia", "Obsession", "Delusion of control", "Dissociation"], "correct": 2}, {"subject": "Psychiatry", "text": "Regarding schizophrenia, which of the following statements are correct?\n1. It is a psychotic disorder.\n2. Hallucinations may occur.\n3. Negative symptoms can be present.\n4. It is diagnosed by a single panic attack.", "options": ["2 and 4 only", "1, 2 and 3 only", "1 and 4 only", "1, 2, 3 and 4"], "correct": 1}, {"subject": "Psychiatry", "text": "The drug of choice for treatment-resistant schizophrenia is:", "options": ["Fluoxetine", "Haloperidol", "Clozapine", "Lithium"], "correct": 2}, {"subject": "Psychiatry", "text": "A patient with depressed mood, anhedonia, sleep disturbance, and suicidal thoughts for 3 weeks most likely has:", "options": ["Major depressive disorder", "Panic disorder", "Dysthymia", "Cyclothymia"], "correct": 0}, {"subject": "Psychiatry", "text": "Regarding mania, which of the following statements are correct?\n1. Elevated or irritable mood may occur.\n2. Decreased need for sleep is common.\n3. It may require hospitalization.\n4. It is defined only by sadness.", "options": ["1 and 4 only", "1, 2 and 3 only", "2 and 4 only", "1, 2, 3 and 4"], "correct": 1}, {"subject": "Psychiatry", "text": "Which drug is a mood stabilizer commonly used in bipolar disorder?", "options": ["Diazepam", "Amoxicillin", "Lithium", "Propranolol"], "correct": 2}, {"subject": "Dermatology", "text": "Silvery scales with pinpoint bleeding on scraping is:", "options": ["Vitiligo", "Lichen planus", "Psoriasis", "Scabies"], "correct": 2}, {"subject": "Dermatology", "text": "Regarding psoriasis, which of the following statements are correct?\n1. Auspitz sign may be seen.\n2. Koebner phenomenon may occur.\n3. Nail pitting can be present.\n4. Wickham striae are typical.", "options": ["1, 2 and 3 only", "2 and 4 only", "1 and 4 only", "1, 2, 3 and 4"], "correct": 0}, {"subject": "Dermatology", "text": "A flaccid blister with positive Nikolsky sign suggests:", "options": ["Psoriasis", "Bullous pemphigoid", "Urticaria", "Pemphigus vulgaris"], "correct": 3}, {"subject": "Dermatology", "text": "A patient has hypopigmented anesthetic patches and thickened peripheral nerves. Most likely diagnosis?", "options": ["Lichen planus", "Tinea versicolor", "Leprosy", "Vitiligo"], "correct": 2}, {"subject": "Dermatology", "text": "A child with grouped vesicles on an erythematous base and intense itching at night most likely has:", "options": ["Pityriasis rosea", "Impetigo", "Psoriasis", "Scabies"], "correct": 3}, {"subject": "Forensic Medicine", "text": "Rigor mortis usually begins first in:", "options": ["Back muscles", "Leg muscles", "Finger nails", "Jaw muscles"], "correct": 3}, {"subject": "Forensic Medicine", "text": "Regarding livor mortis, which of the following statements are correct?\n1. It is postmortem hypostasis.\n2. It may become fixed after some hours.\n3. It can help estimate time since death.\n4. It is a sign of life only.", "options": ["1, 2, 3 and 4", "2 and 4 only", "1 and 4 only", "1, 2 and 3 only"], "correct": 3}, {"subject": "Forensic Medicine", "text": "A cut wound with clean, sharp margins is most likely:", "options": ["Contusion", "Incised wound", "Laceration", "Abrasion"], "correct": 1}, {"subject": "Forensic Medicine", "text": "Regarding hanging, which of the following statements are correct?\n1. The ligature mark is usually oblique.\n2. The mark is usually above the thyroid cartilage.\n3. The mark is usually continuous.\n4. Fracture of hyoid bone is common in older victims.", "options": ["1, 2 and 4 only", "1, 2, 3 and 4", "1 and 3 only", "2 and 3 only"], "correct": 0}, {"subject": "Forensic Medicine", "text": "Organophosphorus poisoning is treated with:", "options": ["Naloxone and vitamin K", "Sodium nitrite and thiosulfate", "Atropine and pralidoxime", "Flumazenil and atropine"], "correct": 2}, {"subject": "Ophthalmology", "text": "Primary open-angle glaucoma typically has:", "options": ["Fixed mid-dilated pupil", "Rapid corneal edema always", "Open anterior chamber angle", "Sudden painful red eye"], "correct": 2}, {"subject": "Ophthalmology", "text": "Regarding angle-closure glaucoma, which of the following statements are correct?\n1. It may present with pain and redness.\n2. It can cause halos around lights.\n3. Pilocarpine may be used after initial pressure control.\n4. It is always asymptomatic.", "options": ["2 and 4 only", "1, 2, 3 and 4", "1 and 4 only", "1, 2 and 3 only"], "correct": 3}, {"subject": "Ophthalmology", "text": "A patient has gradual painless loss of vision with central lens opacity. Diagnosis?", "options": ["Glaucoma", "Uveitis", "Retinal detachment", "Cataract"], "correct": 3}, {"subject": "Ophthalmology", "text": "Fundus shows background diabetic retinopathy with neovascularization. Diagnosis?", "options": ["Proliferative diabetic retinopathy", "Hypertensive retinopathy only", "Central retinal vein occlusion", "Mild NPDR"], "correct": 0}, {"subject": "Ophthalmology", "text": "A sudden painless loss of vision with pale retina and cherry-red spot suggests:", "options": ["CRVO", "Optic neuritis", "Retinal detachment", "CRAO"], "correct": 3}, {"subject": "Ophthalmology", "text": "Regarding retinal detachment, which of the following statements are correct?\n1. Flashes and floaters may occur.\n2. It is a retinal emergency.\n3. Rhegmatogenous type is common.\n4. It is usually caused by cataract alone.", "options": ["2 and 4 only", "1, 2, 3 and 4", "1, 2 and 3 only", "1 and 4 only"], "correct": 2}, {"subject": "Ophthalmology", "text": "A patient has eye pain, photophobia, circumcorneal congestion, and small pupil. Most likely diagnosis?", "options": ["Cataract", "Conjunctivitis", "Open-angle glaucoma", "Acute anterior uveitis"], "correct": 3}];
+
+// ---------- Watermark ----------
+function buildWatermark(){
+  const layer = document.getElementById('watermark-layer');
+  const text = 'DESIGN BY DEVID VACHHANI';
+  layer.innerHTML = '';
+  const rows = 26;
+  const itemsPerRow = 10;
+  for(let r=0; r<rows; r++){
+    const row = document.createElement('div');
+    row.className = 'wm-row';
+    row.style.position = 'absolute';
+    row.style.top = (r*70 - 400) + 'px';
+    row.style.left = '-50%';
+    for(let i=0;i<itemsPerRow;i++){
+      const s = document.createElement('span');
+      s.textContent = text;
+      row.appendChild(s);
+    }
+    layer.appendChild(row);
+  }
+}
+buildWatermark();
+window.addEventListener('resize', buildWatermark);
+
+const TOTAL_TIME = 200*60; // 200 minutes in seconds for 200 questions
+let timeLeft = TOTAL_TIME;
+let timerInterval = null;
+
+let current = 0;
+const answers = new Array(QUESTIONS.length).fill(null); // selected option index or null
+const marked = new Array(QUESTIONS.length).fill(false);
+
+const startScreen = document.getElementById('start-screen');
+const examScreen = document.getElementById('exam-screen');
+const resultsScreen = document.getElementById('results-screen');
+
+document.getElementById('begin-btn').addEventListener('click', () => {
+  startScreen.style.display = 'none';
+  examScreen.style.display = 'flex';
+  renderQuestion();
+  startTimer();
+});
+
+function startTimer(){
+  updateTimerDisplay();
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    updateTimerDisplay();
+    if(timeLeft <= 0){
+      clearInterval(timerInterval);
+      submitTest();
+    }
+  }, 1000);
+}
+
+function updateTimerDisplay(){
+  const h = Math.floor(timeLeft/3600);
+  const m = Math.floor((timeLeft%3600)/60);
+  const s = timeLeft%60;
+  const el = document.getElementById('timer');
+  el.textContent = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  if(timeLeft <= 300){ el.classList.add('low'); } else { el.classList.remove('low'); }
+}
+
+function renderQuestion(){
+  const q = QUESTIONS[current];
+  document.getElementById('qnum').textContent = current+1;
+  document.getElementById('subject-chip').textContent = q.subject;
+  document.getElementById('question-text').textContent = q.text;
+  document.getElementById('question-text').className = 'question-text' + (q.text.includes('\n') ? ' match-q' : '');
+
+  const progressPct = ((current+1)/QUESTIONS.length)*100;
+  document.getElementById('progress-fill').style.width = progressPct + '%';
+
+  const container = document.getElementById('options-container');
+  container.innerHTML = '';
+  const letters = ['A','B','C','D'];
+  q.options.forEach((opt, idx) => {
+    const div = document.createElement('div');
+    div.className = 'option' + (answers[current] === idx ? ' selected' : '');
+    div.innerHTML = `<div class="option-letter">${letters[idx]}</div><div>${opt}</div>`;
+    div.addEventListener('click', () => selectOption(idx));
+    container.appendChild(div);
+  });
+
+  document.getElementById('mark-btn').className = 'btn-ghost' + (marked[current] ? ' active-mark' : '');
+  document.getElementById('prev-btn').disabled = (current === 0);
+  document.getElementById('next-btn').textContent = (current === QUESTIONS.length-1) ? 'Finish' : 'Next';
+
+  renderPalette();
+}
+
+function selectOption(idx){
+  answers[current] = idx;
+  renderQuestion();
+}
+
+document.getElementById('clear-btn').addEventListener('click', () => {
+  answers[current] = null;
+  renderQuestion();
+});
+
+document.getElementById('mark-btn').addEventListener('click', () => {
+  marked[current] = !marked[current];
+  renderQuestion();
+});
+
+document.getElementById('prev-btn').addEventListener('click', () => {
+  if(current > 0){ current--; renderQuestion(); window.scrollTo(0,0); }
+});
+
+document.getElementById('next-btn').addEventListener('click', () => {
+  if(current < QUESTIONS.length-1){ current++; renderQuestion(); window.scrollTo(0,0); }
+  else { openPalette(); }
+});
+
+const paletteSheet = document.getElementById('palette-sheet');
+const paletteOverlay = document.getElementById('palette-overlay');
+
+function openPalette(){
+  renderPalette();
+  paletteSheet.classList.add('open');
+  paletteOverlay.style.display = 'block';
+}
+function closePalette(){
+  paletteSheet.classList.remove('open');
+  paletteOverlay.style.display = 'none';
+}
+document.getElementById('palette-btn').addEventListener('click', openPalette);
+paletteOverlay.addEventListener('click', closePalette);
+
+function renderPalette(){
+  const grid = document.getElementById('palette-grid');
+  grid.innerHTML = '';
+  QUESTIONS.forEach((q, idx) => {
+    const cell = document.createElement('div');
+    let cls = 'pgrid-item';
+    if(marked[idx]) cls += ' marked';
+    else if(answers[idx] !== null) cls += ' answered';
+    if(idx === current) cls += ' current';
+    cell.className = cls;
+    cell.textContent = idx+1;
+    cell.addEventListener('click', () => {
+      current = idx;
+      closePalette();
+      renderQuestion();
+      window.scrollTo(0,0);
+    });
+    grid.appendChild(cell);
+  });
+}
+
+document.getElementById('submit-btn').addEventListener('click', () => {
+  if(confirm('Submit the test now? You cannot change answers after submitting.')){
+    submitTest();
+  }
+});
+
+function submitTest(){
+  clearInterval(timerInterval);
+  closePalette();
+  examScreen.style.display = 'none';
+  resultsScreen.style.display = 'block';
+  computeResults();
+  window.scrollTo(0,0);
+}
+
+let reviewData = [];
+
+function computeResults(){
+  let correct = 0, wrong = 0, unattempted = 0;
+  const subjectStats = {};
+  reviewData = [];
+
+  QUESTIONS.forEach((q, idx) => {
+    const sel = answers[idx];
+    const isCorrect = sel === q.correct;
+    const isSkipped = sel === null;
+
+    if(!subjectStats[q.subject]) subjectStats[q.subject] = {correct:0, total:0};
+    subjectStats[q.subject].total++;
+
+    let status;
+    if(isSkipped){ unattempted++; status = 'skipped'; }
+    else if(isCorrect){ correct++; status='correct'; subjectStats[q.subject].correct++; }
+    else { wrong++; status='wrong'; }
+
+    reviewData.push({idx, q, sel, status});
+  });
+
+  const totalScore = correct * 4;
+  const maxScore = QUESTIONS.length * 4;
+  const accuracy = (correct+wrong) > 0 ? Math.round((correct/(correct+wrong))*100) : 0;
+
+  document.getElementById('final-score').textContent = totalScore;
+  document.getElementById('stat-correct').textContent = correct;
+  document.getElementById('stat-wrong').textContent = wrong;
+  document.getElementById('stat-unattempted').textContent = unattempted;
+  document.getElementById('stat-accuracy').textContent = accuracy + '%';
+
+  const pct = totalScore / maxScore;
+  const circle = document.getElementById('score-circle');
+  const circumference = 2 * Math.PI * 74;
+  circle.setAttribute('stroke-dasharray', circumference);
+  circle.setAttribute('stroke-dashoffset', circumference * (1 - pct));
+
+  let verdict, sub;
+  if(pct >= 0.8){ verdict = 'Excellent Performance'; sub='You are well ahead of the curve.'; }
+  else if(pct >= 0.6){ verdict = 'Good Attempt'; sub='Solid work — a bit more revision will sharpen this further.'; }
+  else if(pct >= 0.4){ verdict = 'Fair Attempt'; sub='You are building a base — keep at the weak subjects.'; }
+  else { verdict = 'Needs More Practice'; sub='Review the subjects below and try again.'; }
+  document.getElementById('verdict-text').textContent = verdict;
+  document.getElementById('percentile-text').textContent = sub;
+
+  const sbContainer = document.getElementById('subject-breakdown');
+  sbContainer.innerHTML = '';
+  Object.keys(subjectStats).forEach(subj => {
+    const s = subjectStats[subj];
+    const row = document.createElement('div');
+    row.className = 'sb-row';
+    row.innerHTML = `<span class="sb-name">${subj}</span><span class="sb-frac">${s.correct} / ${s.total}</span>`;
+    sbContainer.appendChild(row);
+  });
+
+  renderReviewList('all');
+}
+
+function renderReviewList(filter){
+  const list = document.getElementById('review-list');
+  list.innerHTML = '';
+  const letters = ['A','B','C','D'];
+
+  const filtered = reviewData.filter(r => filter === 'all' ? true : r.status === filter);
+
+  filtered.forEach(r => {
+    const card = document.createElement('div');
+    card.className = 'review-card';
+    let tagHtml;
+    if(r.status === 'correct') tagHtml = '<span class="review-tag correct">Correct</span>';
+    else if(r.status === 'wrong') tagHtml = '<span class="review-tag wrong">Incorrect</span>';
+    else tagHtml = '<span class="review-tag skipped">Skipped</span>';
+
+    let optsHtml = '';
+    r.q.options.forEach((opt, oi) => {
+      let cls = 'review-opt';
+      if(oi === r.q.correct) cls += ' is-correct';
+      else if(oi === r.sel) cls += ' is-wrong-selected';
+      optsHtml += `<div class="${cls}"><b>${letters[oi]}.</b> ${opt}</div>`;
+    });
+
+    card.innerHTML = `${tagHtml}<div class="review-q"><b>Q${r.idx+1} (${r.q.subject}).</b> ${r.q.text}</div>${optsHtml}`;
+    list.appendChild(card);
+  });
+}
+
+document.querySelectorAll('.filter-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    renderReviewList(tab.dataset.filter);
+  });
+});
+
+document.getElementById('retake-btn').addEventListener('click', () => {
+  location.reload();
+});
+
+document.addEventListener('contextmenu', e => e.preventDefault());
+document.addEventListener('copy', e => e.preventDefault());
+
+</script>
+
+</body>
+</html>
