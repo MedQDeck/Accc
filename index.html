@@ -588,10 +588,43 @@
     .exam-body{padding-top:26px;}
   }
 </style>
+<style>
+  body.auth-locked > *:not(#auth-gate) { display:none !important; }
+  #auth-gate {
+    position:fixed; inset:0; z-index:999999; display:flex; align-items:center; justify-content:center;
+    padding:20px; background:var(--paper); overflow:auto;
+  }
+  .auth-card { width:min(420px,100%); background:#fff; border:1px solid var(--line); border-radius:18px;
+    padding:28px; box-shadow:0 12px 40px rgba(15,27,45,.12); }
+  .auth-card h1 { margin:0 0 6px; color:var(--ink); font-family:'Source Serif 4',serif; font-size:32px; }
+  .auth-card p { color:var(--text-dim); margin:0 0 22px; }
+  .auth-card input { width:100%; padding:13px 14px; margin:7px 0; border:1px solid var(--line); border-radius:10px; font:inherit; }
+  .auth-card button { width:100%; padding:13px 14px; margin-top:10px; border:0; border-radius:10px; background:var(--teal); color:#fff; font-weight:700; font:inherit; cursor:pointer; }
+  .auth-card button.secondary { background:transparent; color:var(--teal-dark); border:1px solid var(--teal); }
+  #auth-msg { min-height:20px; margin-top:12px; font-size:14px; color:var(--text-dim); }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
-<body>
+<body class="auth-locked">
+
+<div id="auth-gate">
+  <div class="auth-card">
+    <h1>MedQDeck</h1>
+    <p id="auth-title">Sign in to continue</p>
+
+    <form id="auth-form">
+      <input id="auth-email" type="email" placeholder="Email" autocomplete="email" required>
+      <input id="auth-password" type="password" placeholder="Password" autocomplete="current-password" minlength="6" required>
+      <button id="auth-submit" type="submit">Login</button>
+    </form>
+
+    <button id="auth-toggle" class="secondary" type="button">Create a new account</button>
+    <div id="auth-msg"></div>
+  </div>
+</div>
+
   <div style="padding:20px;">
-    <a href="./index2.html" target="_self">paper 2</a>
+    <a herf="./index2.html" target="_self">paper 2</a>
   </div>
 
 <div id="watermark-layer"></div>
@@ -993,6 +1026,84 @@ document.getElementById('retake-btn').addEventListener('click', () => {
 document.addEventListener('contextmenu', e => e.preventDefault());
 document.addEventListener('copy', e => e.preventDefault());
 
+</script>
+
+
+<script>
+// ================= SUPABASE LOGIN =================
+// Replace ONLY these two values with your Supabase Project URL and Publishable/API key.
+const SUPABASE_URL = 'PASTE_YOUR_PROJECT_URL_HERE';
+const SUPABASE_PUBLISHABLE_KEY = 'PASTE_YOUR_PUBLISHABLE_API_KEY_HERE';
+
+const { createClient } = window.supabase;
+const supabaseClient = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+
+const authForm = document.getElementById('auth-form');
+const authToggle = document.getElementById('auth-toggle');
+const authSubmit = document.getElementById('auth-submit');
+const authTitle = document.getElementById('auth-title');
+const authMsg = document.getElementById('auth-msg');
+let signupMode = false;
+
+function authMessage(text) { authMsg.textContent = text || ''; }
+
+function showSite() {
+  document.body.classList.remove('auth-locked');
+  document.getElementById('auth-gate').style.display = 'none';
+}
+
+function showLogin() {
+  document.body.classList.add('auth-locked');
+  document.getElementById('auth-gate').style.display = 'flex';
+}
+
+authToggle.addEventListener('click', () => {
+  signupMode = !signupMode;
+  authTitle.textContent = signupMode ? 'Create your account' : 'Sign in to continue';
+  authSubmit.textContent = signupMode ? 'Sign Up' : 'Login';
+  authToggle.textContent = signupMode ? 'I already have an account' : 'Create a new account';
+  authMessage('');
+});
+
+authForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  authSubmit.disabled = true;
+  authMessage('Please wait...');
+  const email = document.getElementById('auth-email').value.trim();
+  const password = document.getElementById('auth-password').value;
+
+  try {
+    if (signupMode) {
+      const { data, error } = await supabaseClient.auth.signUp({ email, password });
+      if (error) throw error;
+      if (data.session) {
+        authMessage('Account created.');
+        showSite();
+      } else {
+        authMessage('Account created. Check your email to confirm your account, then log in.');
+      }
+    } else {
+      const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+      if (error) throw error;
+      showSite();
+    }
+  } catch (err) {
+    authMessage(err.message || 'Something went wrong.');
+  } finally {
+    authSubmit.disabled = false;
+  }
+});
+
+(async () => {
+  const { data } = await supabaseClient.auth.getSession();
+  if (data.session) showSite();
+  else showLogin();
+
+  supabaseClient.auth.onAuthStateChange((_event, session) => {
+    if (session) showSite();
+    else showLogin();
+  });
+})();
 </script>
 
 </body>
